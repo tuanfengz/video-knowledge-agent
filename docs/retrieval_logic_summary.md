@@ -58,15 +58,13 @@ User query: "someone making coffee"
 
 ## 4. YOLO-only vs VLM-enhanced descriptions
 
-| Query | YOLO-only | VLM-enhanced |
-|---|---|---|
-| `"laptop on desk"` | ✅ | ✅ |
-| `"MacBook"` | ❌ | ✅ |
-| `"students studying"` | ❌ | ✅ |
-| `"university library"` | ❌ | ✅ |
-| `"3 people with computers"` | ✅ (counts) | ✅ |
-| `"someone making coffee"` | ❌ (just `cup`) | ✅ |
-| `"election results on screen"` | ❌ | ✅ |
+- "laptop on desk" → works in both
+- "MacBook" → YOLO fails, VLM works
+- "students studying" → YOLO fails, VLM works
+- "university library" → YOLO fails, VLM works
+- "3 people with computers" → both work (YOLO handles counting)
+- "someone making coffee" → YOLO weak (only detects "cup"), VLM works
+- "election results on screen" → YOLO fails, VLM works
 
 ---
 
@@ -74,12 +72,17 @@ User query: "someone making coffee"
 
 ### What tracking adds vs what retrieval needs
 
-| Capability | Tracking provides | Retrieval needs |
-|---|---|---|
-| Same object identity across frames | ✅ track ID continuity | ❌ not required |
-| Object trajectory / movement | ✅ path over time | ❌ not required |
-| Duration an object was present | ✅ track length | ❌ not required |
-| Was object X present in segment? | ✅ (but detection alone suffices) | ✅ detection is enough |
+Tracking provides:
+- object identity across frames
+- motion/trajectory
+- duration of presence
+
+But for retrieval, we only need:
+- whether an object exists in a segment
+
+Conclusion:
+- detection is sufficient
+- tracking adds complexity without improving retrieval quality
 
 ### Why tracking is not needed here
 
@@ -151,12 +154,13 @@ presence        context             (VLM)               (requires          (requ
 
 ## 7. What it is / isn't
 
-- ✅ **Semantic retrieval** — finds relevant video segments by meaning
-- ✅ **Timestamp-precise** — returns exact 5-second window to seek to
-- ✅ **Graceful fallback** — VLM unavailable → YOLO-only descriptions used automatically
-- ✅ **Resumable** — per-segment VLM caption cache survives interruptions
-- ❌ **Not Q&A / generation** — returns ranked segments, not a synthesized answer
-- ❌ **Not re-ranking** — no second-pass VLM verification of retrieved results
+- Finds relevant video segments by meaning
+- Returns exact 5-second timestamps
+- Works without VLM (falls back to YOLO)
+- Supports resumable processing (cached captions)
+
+- Not a Q&A system (no generated answers)
+- No second-pass reranking
 
 ---
 

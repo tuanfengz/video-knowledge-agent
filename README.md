@@ -11,7 +11,7 @@ Semantic video segment retrieval over a corpus of short-form videos. Search by n
 1. **Segment videos:** Each video is split into short, overlapping windows (e.g., 5 seconds).
 2. **Describe each segment:**
 	- Run YOLOv8 object detection on each segment to get structured labels (e.g., "person", "laptop").
-	- (Optional) Use a Vision-Language Model (VLM, e.g., LLaVA or moondream via Ollama) to caption the keyframe for richer, natural language descriptions.
+	- (Optional) Use a Vision-Language Model (VLM, e.g., LLaVA or other VLM models via Ollama) to caption the keyframe for richer, natural language descriptions.
 	- Combine YOLO labels and VLM caption into a single, rich description for each segment.
 3. **Embed and index:** Encode all segment descriptions using sentence-transformers (`all-MiniLM-L6-v2`) and build a FAISS index for fast retrieval.
 
@@ -27,6 +27,34 @@ Semantic video segment retrieval over a corpus of short-form videos. Search by n
 Offline:  video → YOLO detection → sliding window segments → [VLM captions] → sentence-transformers → FAISS index
 Online:   query → sentence-transformers → FAISS cosine search → ranked segments → React UI playback
 ```
+
+## Temporal Segmentation Strategy
+
+We use fixed 5-second overlapping windows as a baseline due to simplicity and full coverage.
+
+**Tradeoffs:**
+- **Pros:**
+	- Guarantees recall (no missed events)
+	- Easy to parallelize
+- **Cons:**
+	- May split semantically coherent events
+	- Temporal boundaries may be misaligned
+
+**Future improvements:**
+- Shot boundary detection (scene-aware segmentation)
+- Adaptive windowing based on motion/activity
+- Temporal pooling with attention across frames
+
+## Segment Representation
+
+Each segment aggregates information from multiple frames:
+
+- **YOLO detections** across sampled frames are merged into a unified object set. For each object label, the system counts the number of distinct frames it appears in within the segment window, providing a robust summary of persistent objects.
+- **VLM caption** is generated from a representative keyframe (typically the midpoint of the segment window), capturing scene context, actions, and details that YOLO may miss.
+
+**Tradeoff:**
+- Simple aggregation is efficient and effective for most retrieval use cases, but may lose temporal ordering or fine-grained action sequences within the segment.
+- More advanced approaches could use temporal attention or sequence models to capture richer temporal dynamics, at the cost of complexity and compute.
 
 ## Tech Stack
 
@@ -54,7 +82,7 @@ Online:   query → sentence-transformers → FAISS cosine search → ranked seg
 	Or with VLM enrichment (requires [Ollama](https://ollama.com) running locally):
 
 	```bash
-	python scripts/build_index.py --use-vlm --vlm-model moondream --index-dir data/index_vlm
+	python scripts/build_index.py --use-vlm --vlm-model llava --index-dir data/index_vlm --video-dir data/raw
 	```
 
 3. Start the API:
@@ -93,9 +121,9 @@ video_knowledge_agent/
 ├── data/
 │   ├── raw/                            ← source videos (.mp4)
 │   ├── index/                          ← YOLO-only FAISS index
-│   ├── index_vlm/                      ← VLM-enhanced FAISS index
-│   └── uploads/                        ← upload staging dir
+│   └── index_vlm/                      ← VLM-enhanced FAISS index
 ├── docs/
+│   ├── technical_writeup.md            ← summary of the project
 │   └── retrieval_logic_summary.md      ← design decisions + query capability
 ├── scripts/
 │   ├── build_index.py                  ← build FAISS index (YOLO or VLM)
@@ -161,3 +189,17 @@ See [docs/retrieval_logic_summary.md](docs/retrieval_logic_summary.md) for desig
 
 - **Important**
 	- Description improvements only take effect after rebuilding the index, because the saved FAISS vectors reflect whatever text was embedded at build time.
+
+## Failure Modes
+
+The system’s limitations are tied to its design choices. Compositional queries (e.g., “person drinking coffee while working”) are not fully captured, since segment representations merge objects and captions without modeling relationships explicitly. Fixed 5-second windows can cause temporal mismatch, where short events are diluted or split across segments. 
+
+Fine-grained recognition (e.g., “Nike backpack”) is unreliable due to YOLO label granularity and VLM caption limitations. Performance also degrades under challenging conditions such as low lighting or motion blur. Overlapping sliding windows may produce redundant results, returning near-duplicate segments. These issues highlight the tradeoff between efficiency and richer temporal or relational modeling.
+
+## Scaling Considerations
+
+To scale to millions of videos, all segment embeddings are precomputed offline using distributed workers (e.g., Ray/Spark), avoiding heavy compute at query time. The FAISS flat index can be replaced with IVF or HNSW for approximate nearest neighbor search, or migrated to a vector database (e.g., Milvus/Weaviate) for horizontal scalability. 
+
+To reduce search space, a hierarchical retrieval strategy is used: first retrieve top-K videos using coarse video-level embeddings, then perform fine-grained segment search within those candidates. Metadata (e.g., detected objects) can be used for pre-filtering to further improve efficiency and precision.
+
+For long videos, adaptive segmentation (e.g., shot detection) and multi-resolution indexing (coarse-to-fine segments) reduce the number of indexed units while preserving semantic relevance. Keyframe-based representations and temporal deduplication further reduce storage and compute overhead.
