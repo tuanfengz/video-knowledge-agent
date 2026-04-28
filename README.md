@@ -67,14 +67,30 @@ Each segment aggregates information from multiple frames:
 
 ## Quickstart
 
-1. Install dependencies:
+
+1. (Recommended) Create and activate a Python virtual environment:
+
+	```bash
+	python3 -m venv .venv
+	source .venv/bin/activate  # On Windows: .venv\\Scripts\\activate
+	```
+
+2. Install dependencies:
 
 	```bash
 	pip install -r requirements.txt
 	```
 
+
 2. Build the index (YOLO-only, fast):
 
+	> **Note:** If you see `ModuleNotFoundError: No module named 'video_knowledge_agent'`, set the Python path:
+	>
+	> ```bash
+	> PYTHONPATH=src python scripts/build_index.py --video-dir data/raw --index-dir data/index
+	> ```
+
+	Or, if your environment already has PYTHONPATH set, you can run:
 	```bash
 	python scripts/build_index.py --video-dir data/raw --index-dir data/index
 	```
