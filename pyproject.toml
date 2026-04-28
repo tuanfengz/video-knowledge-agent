@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-knowledge-agent"
+version = "0.1.0"
+description = "Semantic video segment retrieval with YOLO, VLM captioning, and FAISS"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.0",
+    "pydantic>=2.7.0",
+    "uvicorn>=0.30.0",
+    "ultralytics>=8.0.0",
+    "opencv-python>=4.9.0",
+    "sentence-transformers>=3.0.0",
+    "faiss-cpu>=1.8.0",
+    "openai>=1.30.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

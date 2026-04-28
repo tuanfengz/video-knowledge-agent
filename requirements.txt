@@ -1,0 +1,10 @@
+ultralytics
+opencv-python
+fastapi
+uvicorn
+pydantic
+sentence-transformers
+faiss-cpu
+numpy
+openai
+pytest

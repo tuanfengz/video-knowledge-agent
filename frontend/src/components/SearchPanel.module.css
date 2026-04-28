@@ -1,0 +1,268 @@
+.card {
+  background: #1e2132;
+  border: 1px solid #2d3148;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: -8px 0 0;
+}
+
+/* Suggested chips */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: #2d3148;
+  border: 1px solid #3d4265;
+  color: #94a3b8;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.chip:hover {
+  background: #3d4265;
+  color: #e2e8f0;
+}
+
+/* Input row */
+.inputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.input {
+  flex: 1;
+  background: #13151f;
+  border: 1px solid #2d3148;
+  border-radius: 8px;
+  color: #e2e8f0;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #7c8cf8;
+}
+
+.input::placeholder {
+  color: #4a5568;
+}
+
+.select {
+  background: #13151f;
+  border: 1px solid #2d3148;
+  border-radius: 8px;
+  color: #94a3b8;
+  padding: 10px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.searchBtn {
+  background: #7c8cf8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.searchBtn:hover:not(:disabled) {
+  background: #6474e5;
+}
+
+.searchBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Error */
+.error {
+  color: #f87171;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Results */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meta {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.meta strong {
+  color: #e2e8f0;
+}
+
+.meta em {
+  color: #7c8cf8;
+  font-style: normal;
+}
+
+.empty {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.item {
+  background: #13151f;
+  border: 1px solid #2d3148;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rank {
+  color: #7c8cf8;
+  font-weight: 700;
+  font-size: 0.8rem;
+  min-width: 28px;
+}
+
+.score {
+  background: #2d3148;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.videoId {
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timestamp {
+  color: #34d399;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.description {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.label {
+  background: #1e2132;
+  border: 1px solid #2d3148;
+  color: #64748b;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Inline video player */
+.playHint {
+  margin-left: auto;
+  color: #7c8cf8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.videoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.video {
+  width: 100%;
+  border-radius: 6px;
+  background: #000;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+.videoHint {
+  color: #475569;
+  font-size: 0.72rem;
+  margin: 0;
+  text-align: center;
+}
+
+.clearBtn {
+  background: none;
+  border: 1px solid #2d3148;
+  color: #94a3b8;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+
+.clearBtn:hover {
+  background: #2d3148;
+  color: #e2e8f0;
+}

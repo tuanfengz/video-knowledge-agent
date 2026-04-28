@@ -1,0 +1,7 @@
+{
+  "workbench.editorAssociations": {
+    "*.mp4": "vscode.videoPreview",
+    "*.webm": "vscode.videoPreview"
+  },
+  "mediaPreview.video.autoPlay": true
+}

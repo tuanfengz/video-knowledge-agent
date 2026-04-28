@@ -1,0 +1,36 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.badge {
+  background: #2d3148;
+  color: #7c8cf8;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.72rem;
+}
+
+.video {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+  border: 1px solid #2d3148;
+  max-height: 340px;
+  object-fit: contain;
+}
